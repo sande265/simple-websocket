@@ -78,7 +78,7 @@ let clients = [];
 
 wss.on("connection", (ws, req) => {
 
-    // ws.isAlive = true;
+    ws.isAlive = true;
     // ws.on("pong", hearbeat)
 
     let [_path, params] = req.url && req.url.split('?');
@@ -156,7 +156,7 @@ const handleClientEvents = (client, device, method, callback) => {
             if (device === metadata.device) {
                 processing = true;
                 client.send(method);
-                // client.ping();
+                client.ping();
                 client.on("message", (data, isBinary) => {
                     callback(null, { data, isBinary });
                     processing = false;
