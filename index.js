@@ -216,7 +216,7 @@ app.get("/api/clients", (req, res) => {
     }
 })
 
-app.post("/api/flush-clients", (req, res) => {
+app.get("/api/flush-clients", (req, res) => {
     [...connections.keys()].map((client) => {
         client.terminate();
         clients = [];
