@@ -33,7 +33,7 @@
 
     if (Object.keys(paramObj).length > 0) {
 
-        const socket = new WebSocket(`ws://${window.location.hostname ? window.location.hostname : 'localhost:8000'}/sockets?device=${paramObj.device}`);
+        const socket = new WebSocket(`${window.location.protocol.match(/^https.*$/g) ? "wss" : "ws"}://${window.location.hostname ? window.location.hostname : 'localhost:8000'}/sockets?device=${paramObj.device}`);
 
 
         socket.addEventListener("open", (e) => {

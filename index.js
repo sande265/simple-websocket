@@ -226,6 +226,10 @@ app.post("/api/flush-clients", (req, res) => {
     })
 })
 
+// app.get("/", (req, res) => {
+//     res.sendFile(`${__dirname}/index.html`)
+// })
+
 app.post("/api/notify-client", (req, res) => {
     let data = req.body;
     let validationRule = {
