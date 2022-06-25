@@ -1,0 +1,125 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sande's SmartHome</title>
+    <style>
+        :root{--darkBg:#212529;--lightBg:#f8f9fa;--textLight:#fff;--textDark:#000}.dark{color:var(--textLight);background-color:var(--darkBg)}.light{color:var(--textDark);background-color:var(--lightBg)}body{font-family:'Courier New',Courier,monospace;margin:0;max-width:800;margin:0 auto}.form-input{border:1px solid #ced4da;padding:.375rem .75rem;line-height:1.5;font-size:1rem;color:#fff;background-color:inherit;border-radius:8px}.form-input:focus{border-color:#86b7fe;outline:0;box-shadow:0 0 0 .2rem rgb(13 110 253 / 25%)}.header{display:flex;flex-direction:row;align-items:center;width:100%}.brand{margin-left:1rem}.header-item{list-style:none;margin-left:auto;margin-right:1rem;display:flex;align-items:center}.body{padding:.25rem 1rem}.body>section{padding-bottom:1rem;border-bottom:3px dashed #d3d3d3}.status{margin:1rem 0;display:flex;flex-direction:row;justify-content:space-between;align-items:center}.status>.inactive{border:1px solid red;border-radius:24px;padding:4px 8px;background-color:rgba(255,0,0,.363)}.input-group{display:flex;flex-direction:row;justify-content:space-evenly;margin:.2rem 0 .75rem 0}.input-group>label{display:flex;width:30%;align-self:center;flex-direction:column}.input-group>input{display:flex;width:30%;flex-direction:column}.table{width:100%}.table{border:1px solid #d3d3d3;color:inherit;border-radius:4px;padding:4px;margin:1rem 0;max-width:500}.table>tbody{text-align:center}.table>:not(caption)>*>*{padding:.3rem .3rem;border-bottom-width:1px}.switch{position:relative;display:inline-block;width:55px;height:30px;margin-left:8px;margin-right:1rem;}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#000;-webkit-transition:.4s;transition:.4s}.slider:before{position:absolute;content:"";height:22px;width:22px;left:4px;bottom:4px;background-color:#fff;transition:.4s}input:checked+.slider{background-color:#fff;border:1px solid #000}input:checked+.slider::before{background-color:#000}input:focus+.slider{box-shadow:0 0 1px #000}input:checked+.slider:before{transform:translateX(23px)}.slider.round{border-radius:34px}.slider.round:before{border-radius:50%}.wifi{padding:4px;position:relative}.ssid{color:rgb(20 150 220);background-color:transparent;padding:.3rem .3rem;border:none;font-size:1rem}.ssid:hover{cursor:pointer;opacity:.8}.wifi,.wifi::before{top:5px;margin:-2px;display:inline-block;border:6px double transparent;border-top-color:currentColor;border-radius:50%}.wifi:before{content:'';width:0;height:0}.btn{padding:.7rem 1rem;border-radius:24px;background-color:#86b7fe;border:none;color:inherit;font-size:1rem;margin-top:8px;transition:.2s box-shadow ease-out}.btn:hover{cursor:pointer;box-shadow:-4px 1px 10px 4px rgba(54,128,238,.527)}.mx-auto{margin-left:auto!important;margin-right:auto!important}.px-5{padding-left:2em!important;padding-right:2em!important}.submit{width:100%;text-align:center}.footer{padding:1rem 0;margin:1rem auto;text-align:center}@media screen and (max-width:480px){.input-group{flex-direction:column}.input-group>label{flex-direction:row;width:100%;margin:8px}.input-group>input{width:100%}.btn{width:100%}}
+    </style>
+</head>
+
+<body id="body" class="dark">
+    <header class="header">
+        <div class="brand">
+            SmartifyMe
+        </div>
+        <ul class="header-item">
+            <li>Information</li>
+        </ul>
+        <label class="switch">
+            <input onclick="toggleTheme()" type="checkbox">
+            <span class="slider round"></span>
+        </label>
+    </header>
+    <div class="body">
+        <section class="section-information" id="information">
+            <h3 id="conn-info">WiFi Settings</h3>
+            <div class="status">
+                <span>Status: </span>
+                <span class="inactive">Not Connected!</span>
+            </div>
+            <div class="status">
+                <span>IP Address: </span>
+                <span>10.0.0.30</span>
+            </div>
+            <div class="status">
+                <span>Mac Address: </span>
+                <span>78:C2:C0:99:ED:F0</span>
+            </div>
+            <div class="status">
+                <span>Device ID: </span>
+                <span>78c2c099edf0</span>
+            </div>
+            <div class="networks">
+                <span>Available Networks</span>
+                <table class="table mx-auto">
+                    <tbody id="network-body"></tbody>
+                </table>
+            </div>
+            <div class="input-group">
+                <label for="">SSID: </label>
+                <input class="form-input" type="text" name="" id="ssid-input" placeholder="Enter WiFI Name" />
+            </div>
+            <div class="input-group">
+                <label for="">Password: </label>
+                <input class="form-input" type="text" name="" id="" placeholder="Enter Password" />
+            </div>
+            <div class="submit">
+                <button class="btn px-5">Connect</button>
+            </div>
+        </section>
+        <footer class="footer">
+            Copyright &copy; Sandesh Singh, SmartifyMe 2022
+        </footer>
+    </div>
+    <script>
+        var networks = [
+            {
+                ssid: "OMEN",
+                channel: 11,
+                power: "-63dBm",
+                encrypted: '&#128274;'
+            },
+            {
+                ssid: "ShantiHome 5G",
+                channel: 11,
+                power: "-33dBm",
+                encrypted: '&#128274;'
+            }
+        ]
+
+        const handleConnectSsid = ({ ssid }) => {
+            document.getElementById("ssid-input").value = ssid;
+        }
+
+        networks.forEach((network, i) => {
+            let { ssid, channel, encrypted, power } = network;
+            const tr = document.createElement("tr");
+            const wifi = document.createElement("div");
+            wifi.className = 'wifi'
+            const td = document.createElement("td");
+            td.style.position = "relative"
+            td.appendChild(wifi);
+            tr.appendChild(td);
+            Object.keys({ ssid }).forEach((item, idx) => {
+                const td = document.createElement("td");
+                const button = document.createElement("button");
+                button.className = "ssid";
+                button.innerHTML = network[item];
+                button.onclick = () => handleConnectSsid(network)
+                td.appendChild(button);
+                tr.appendChild(td);
+                if (Object.keys({ ssid }).length - 1 === idx) {
+                    const td = document.createElement("td");
+                    td.innerHTML = "&#128274;";
+                    tr.appendChild(td);
+                }
+            })
+            document.getElementById("network-body").appendChild(tr);
+        })
+
+        const toggleTheme = () => {
+            let element = document.getElementById("body")
+            if (element.className === 'light')
+                element.className = "dark"
+            else {
+                element.className = 'light'
+            }
+        }
+
+    </script>
+</body>
+
+</html>

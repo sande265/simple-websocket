@@ -1,0 +1,73 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Testing</title>
+</head>
+
+<body>
+    <span>ID:</span>
+    <span id="device_id"></span>
+    <br />
+    <button onclick="sendMessage()">Send Message</button>
+</body>
+<script>
+
+    let _params = window.location.search ? window.location.search.split('?')[1].split("&") : [];
+    let paramObj = {};
+    _params.forEach((param) => {
+        if (param) {
+            let keyVal = param.split("=");
+            if (keyVal[1] === 'true') {
+                keyVal[1] = true;
+            } else if (keyVal[1] === 'false') {
+                keyVal[1] = false;
+            } else if (/^\d+$/.test(keyVal[1])) {
+                keyVal[1] = parseFloat(keyVal[1])
+            }
+            Object.assign(paramObj, { [keyVal[0]]: keyVal[1] })
+        }
+    })
+
+    if (Object.keys(paramObj).length > 0) {
+
+        const socket = new WebSocket(`ws://${window.location.hostname ? window.location.hostname : 'localhost:8000'}/sockets?device=${paramObj.device}`);
+
+
+        socket.addEventListener("open", (e) => {
+            console.log("Successfully Opened WebSocket.", paramObj);
+            document.getElementById('device_id').innerHTML = JSON.stringify(paramObj)
+            // socket.send(JSON.stringify({ user: paramObj.device }))
+        })
+
+        socket.addEventListener("message", ({ data }) => {
+            try {
+                console.log("Message from the server: ", JSON.parse(data));
+            } catch (e) {
+                if (data === 'get-data') {
+                    let date = new Date();
+                    let data = { device: paramObj.device, token: 1234567890, currentLevel: 90.00, timestamp: date }
+                    console.log("Server Requested data, sending...", data);
+                    socket.send(JSON.stringify(data))
+                } else if (data === 'switch-off' || data === 'switch-on') {
+                    if (data === 'switch-off') paramObj['ledState'] = 0;
+                    else paramObj['ledState'] = 1;
+                    let _data = { message: "Operation Completed Successfully", ledState: paramObj['ledState'] }
+                    console.log("Server Requested data, sending...", _data);
+                    socket.send(JSON.stringify(_data));
+                }
+            }
+        })
+
+        const sendMessage = () => {
+            socket.send("HIGH")
+        }
+    } else {
+        alert("Device ID is missing")
+    }
+
+</script>
+
+</html>
