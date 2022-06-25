@@ -133,14 +133,14 @@ wss.on("close", () => {
 
 const disconnectClient = (client, callback, processing, device) => {
     if (processing) {
-        console.log("Client is to be disconnected: ", device);
-        // let idx = clients.findIndex(x => x === device);
-        // if (idx > -1) {
-        //     connections.delete(client);
-        //     clients.splice(idx, 1);
-        //     processing = false;
-        //     callback({ code: 400, message: `The requested client(${device}) has disconnected.` }, null);
-        // }
+        let idx = clients.findIndex(x => x === device);
+        if (idx > -1) {
+            connections.delete(client);
+            clients.splice(idx, 1);
+            processing = false;
+            callback({ code: 400, message: `The requested client(${device}) has disconnected.` }, null);
+            console.log("Removing Dormant/Inactive device: %d", device);
+        }
     }
 }
 
